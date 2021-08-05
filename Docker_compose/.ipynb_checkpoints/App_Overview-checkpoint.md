@@ -29,6 +29,6 @@ here are the containers I want to create
     - map port 4001 to 8081
     
 **Remark** the docker-compose.yaml will create the both containers on the same network, so no network mapping to do in between the node_app and the redis-server  
-<img src="/photos/1.png" >
+<img src="photos/1.png" >
 
 the port mapping is only done for the mapping between outide of containers to the inside containers
