@@ -32,3 +32,22 @@ here are the containers I want to create
 <img src="photos/1.png" >
 
 the port mapping is only done for the mapping between outide of containers to the inside containers
+
+## Docker compose commands
+- RUN commands
+some analogy comparing to docker commands :  
+docker run image --> docker-compose up  
+  
+docker build . + docker run image -- > docker-compose up --build  
+
+- RUN commands in the background
+docker-compose up -d  
+to check the running containers :  
+Docker-compose ps (need to be run from the folder containing the yaml file)
+- stop commands
+docker-compose down (need to be run from the folder containing the yaml file)
+
+## Restart policies
+<img src="photos/2.png" >
+
+

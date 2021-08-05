@@ -3,6 +3,7 @@ services:
   redis-server:
     image: 'redis'
   node-app:
-    build: /Node_app_image
+    restart: always # define the policy of restart in case the server went down
+    build: ./Node_app_image
     ports:
       - '4001:8081'

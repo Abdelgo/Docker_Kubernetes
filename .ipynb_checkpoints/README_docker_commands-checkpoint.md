@@ -58,7 +58,11 @@ OK
 another example with a shell start :    
 docker exec -it "container ID" sh (to run a shell command page inside the docker container)   
 it is also possible the run the container with a start of shell at the same time with the following command:   
-docker run -it "container ID" sh  
+docker run -it "container ID" sh
+
+# running the docker container in the background
+docker run imageId -d
+
 
 ## Container Isolation:  
 we build 2 Containers from the same Docker Image, thoses 2 containers don't share the same 'file system'  

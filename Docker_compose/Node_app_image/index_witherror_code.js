@@ -1,14 +1,16 @@
 const express = require('express');
 const redis = require('redis');
+const process = require('process');
 
 const app = express();
 const client = redis.createClient({
-  host: 'redis-server', // normally we use 'https://myredis-database.com/' but with docker compose we only specify the redis image included in the docker-compose Yaml file
-  port: 6379, // this is the port used by reis by default
+  host: 'redis-server',
+  port: 6379,
 });
 client.set('visits', 0);
 
 app.get('/', (req, res) => {
+  process.exit(0);// added to simulate crash and failure (0: no error code / else error code)
   client.get('visits', (err, visits) => {
     res.send('Number of visits ' + visits);
     client.set('visits', parseInt(visits) + 1);
