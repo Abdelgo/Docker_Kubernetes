@@ -8,9 +8,9 @@ the project is to make an app that show the number of visits, this app contains:
 Solution 1: put the app and the database in the same Image, but this solution is not scalable in case we would use multi containers (the database will have different values from container to another)  
 Solution 2: create an app Image and another one with the database (Redis here)
 
-> DOCKER CONTAINER(Node App)
-> DOCKER CONTAINER(Node App) <------>  DOCKER CONTAINER(Redis)
-> DOCKER CONTAINER(Node App)
+> DOCKER CONTAINER(Node App)  
+> DOCKER CONTAINER(Node App) <------>  DOCKER CONTAINER(Redis)  
+> DOCKER CONTAINER(Node App)  
 
 the communication between the both containers will be assured by Docker Compose
 
