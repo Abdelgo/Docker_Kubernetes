@@ -10,9 +10,10 @@ Container ?
 
 
 # Docker CLI Commands
-docker Version
-docker ps
-docker ps --all
+https://docs.docker.com/engine/reference/commandline/image_rm/ (link to docker CLI)    
+docker Version  
+docker ps  
+docker ps --all  
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES
 ae0ffd345513        busybox             "ping google.com"   2 minutes ago       Exited (0) 52 seconds ago                       festive_tu
 
@@ -26,6 +27,9 @@ docker start "Container Id" (no argument given because the container ID has alre
 
 docker start -a "Container Id" (-a to see the output)   
 
+## remove docker image
+docker image rm -f 4a6ddcc1d5db
+
 ## Remove containers  
 docker system prune  
 WARNING! This will remove:  
@@ -34,10 +38,10 @@ WARNING! This will remove:
   - all dangling images
   - all dangling build cache
   
-to see logs of a running container  
+# to see logs of a running container  
 docker logs "Container Id"  
 
-to stop a container  
+# to stop a container  
 
 Docker stop "Container Id" (send a SIGTERM signal saying stop the process when you are ready 'smooth stop')  
 docker stop will be executed for 10s, if container not stopped then docker sill send a kill signal" 
