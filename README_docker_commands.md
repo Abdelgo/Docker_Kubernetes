@@ -40,11 +40,11 @@ docker logs "Container Id"
 to stop a container  
 
 Docker stop "Container Id" (send a SIGTERM signal saying stop the process when you are ready 'smooth stop')  
-§ docker stop will be executed for 10s, if container not stopped then docker sill send a kill signal" $   
+docker stop will be executed for 10s, if container not stopped then docker sill send a kill signal" 
 
 docker kill "Container Id" (send a SIGKILL signal saying stop now, no additional work executed!)  
 
-## running a command inside a running container  
+# running a command inside an already running container 
 docker exec -it "container ID" "Command"  
 docker exec -i -t "container ID" "Command" (the -i is for the Stdin input in linux and the t is for the nice format)  
 ex:   
@@ -55,7 +55,7 @@ OK
 "5"  
 127.0.0.1:6379>   
 
-## Start a shell  
+another example with a shell start :    
 docker exec -it "container ID" sh (to run a shell command page inside the docker container)   
 it is also possible the run the container with a start of shell at the same time with the following command:   
 docker run -it "container ID" sh  
@@ -65,3 +65,44 @@ we build 2 Containers from the same Docker Image, thoses 2 containers don't shar
 ex :  
 
 
+# building the docker Image
+
+## a- specifing a name (to be used instead of "container ID")
+
+<img src="./photos/5.png">
+
+Docker build -t yourdockerID/Repo(projectname):version  
+
+## b- creating manually a docker image with docker commit
+1) create the base  
+docker run -it Alpine sh 'this will open the shell using the alpine base'
+
+2) Install dependencies inside the alpine shell
+apk add --update redis
+
+3) Open another terminal page
+docker ps (and look for the running container) to get the container ID. 
+docker commit -c 'CMD ["redis-server"]' CONTAINERID  
+A new image ID will be created
+
+docker run "image ID"
+
+# PORT Mapping in docker :
+the port mapping is done at the run time using the folowing command :  
+docker run -p 8080:8080 ImageId
+<img src="/photos/9.png">
+<img src="/photos/10.png">
+
+# Specifying the Working Directory:
+in order to avoid any mess with base image files included in the directory of your container, for example you could have a conflict between a file name var in your application and the the one in the container base directory. This is why it's very important to sepcifiy a WORKDIR to avoid this kind of problems that can override some important files.  
+
+<img src="/photos/11.png">
+
+see below example (WORKDIR /Node_js_app) :  
+livai$ docker exec -it 13e59d931553  sh
+/Node_js_app # ls
+Dockerfile         README.md          index.js           node_modules       package-lock.json  package.json
+/Node_js_app # cd ..
+/ # ls
+Node_js_app  dev          home         media        opt          root         sbin         sys          usr
+bin          etc          lib          mnt          proc         run          srv          tmp          var
