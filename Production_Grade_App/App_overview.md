@@ -54,7 +54,7 @@ but when in production we will be using :
 **remark**: for production purpose we don't need all the files, we only need the build file that will be created during the "npm run build" command  
 <img src="photos/12.png" >
 ## building the production container - Multistep Builds
-we will follow the steps below:  
-<img src="photos/13.png" >
+we will follow the steps below:   
+<img src="photos/13.png" >  
 so the dockerfile will be:  
-<img src="photos/14.png" >
+<img src="photos/14.png" >  
