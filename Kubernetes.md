@@ -1,4 +1,5 @@
 # Welcome to Kubernetes !
+[Kubernetes cheatsheet](https://kubernetes.io/fr/docs/reference/kubectl/cheatsheet/)
 
 ## 1. Why Kubernetes ?
 the problem is all about scaling our application, let's see the example of AWS Beanstalk when we start to hit a lot users in the same time on our application, the AWS BS scale horizontally by creating a copy of the whole architecture as showed below :  

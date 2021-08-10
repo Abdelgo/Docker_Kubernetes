@@ -1,0 +1,12 @@
+apiVersion: v1 # each version give access to a set of object we can use
+kind: Service # defining the object type Service used to set up networking
+metadata:
+  name: client-node-port
+spec:
+  type: NodePort
+  ports: # an array
+    - port: 3050 # used by other pods to get access to the targetport
+      targetPort: 3000
+      nodePort: 31515 # port in the outside world
+  selector:
+    component: web # we could change component by another name we are free
