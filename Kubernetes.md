@@ -152,6 +152,7 @@ the updating process is limited because we cannot change everything (containerPo
 kubectl apply -f client.pod.yaml  
 pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)
 
+## 10. Deployment object
 > So avoid this issue, we will introduce a new Object called Deployment  
 <img src="/photos/33.png">  
 <img src="/photos/34.png">  
@@ -160,15 +161,59 @@ the deployment runs a set of identical pods (on or more), every pod will have th
 Deployment use what is called a Pod template to create pods as shown below :  
 <img src="/photos/35.png">
 
-When updating the pod created is not possible, Deployment will kill the Pod and create a new one.
+When updating the pod created is not possible, Deployment will kill the Pod and create a new one.  
 
-## Why use Service ? 
+Deployment object config file: 
+```YAML
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: client-deployment # 
+spec:
+  replicas: 1 # number of pods we want to create
+  selector: # used to select the right component by its label, in order to keep a handle on it
+    matchLabels:
+      component: web
+  template: # from here we give the definition of the pod
+    metadata:
+      labels:
+        component: web # the label of the pod
+    spec:
+      containers:
+        - name: client
+          image: stephengrider/multi-client
+          ports:
+            - containerPort: 3000
+```
+
+### Why use Service ? 
 Service alow to route traffic the right pod using the component selector, this layer is very important as the pod IP may change for whatever the cause (re-run, shutdown, error)  
-> kubectl get pods -o wide  
+> kubectl get pods -o wide   
 
 |NAME  |READY  | STATUS  |  RESTARTS  | AGE  |   IP   | NODE |NOMINATED NODE  | READINESS GATES|  
 | --- | --- | --- |--- | --- | --- |--- | --- | --- |  
-|client-deployment-5dfb6bf966-ctwgd |  1/1  |   Running | 0|7m45s |  10.1.0.7  | docker-desktop  |  <none> | <none>|  
+|client-deployment-5dfb6bf966-ctwgd |  1/1  |   Running | 0|7m45s |  10.1.0.7  | docker-desktop  |  none| none|  
     
 
 <img src="/photos/37.png">
+    
+## 11. Updating a docker image version inside deployment
+We have 3 solutions : 
+<img src="/photos/38.png">
+
+it seems that the best practice will be the 3rd then the 2nd, we will expolore below the 3rd:  
+> create a new image version (docker buil + docker push) with a specific name
+> apply the followong command
+
+<img src="/photos/39.png">
+
+> kubectl set image deployment/client-deployment client=stephengrider/multi-client:V3  
+
+## Aside:
+to see the containers running inside the VM (node), we need to link our local machine to minikube by following the steps below:  
+> eval $(minikube docker-env)
+$ 
+> then you can run: docker ps  
+
+to stop containers you can use :  docker system prune -a
+
