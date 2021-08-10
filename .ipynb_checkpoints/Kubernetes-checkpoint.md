@@ -166,7 +166,8 @@ When updating the pod created is not possible, Deployment will kill the Pod and 
 Service alow to route traffic the right pod using the component selector, this layer is very important as the pod IP may change for whatever the cause (re-run, shutdown, error)  
 > kubectl get pods -o wide  
 
-NAME                   |              READY  | STATUS  |  RESTARTS  | AGE  |   IP   |      NODE             NOMINATED NODE  | READINESS GATES|  
-client-deployment-5dfb6bf966-ctwgd |  1/1  |   Running |  0   |       7m45s |  10.1.0.7  | docker-desktop  | <none>     |      <none>|  
+|NAME                   |              READY  | STATUS  |  RESTARTS  | AGE  |   IP   |      NODE             NOMINATED NODE  | READINESS GATES|
+| --- | --- | --- |--- | --- | --- |--- | --- | --- |
+|client-deployment-5dfb6bf966-ctwgd |  1/1  |   Running |  0   |       7m45s |  10.1.0.7  | docker-desktop  |  <none>     |      <none>|  
 
 <img src="/photos/37.png">
