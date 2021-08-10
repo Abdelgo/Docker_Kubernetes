@@ -86,7 +86,9 @@ spec:
 
 Explanation here below :  
 <img src="/photos/24.png">  
-more details
+
+more details  
+
 <img src="/photos/25.png"> 
 
 Start Kuberntes cluster with config: 
@@ -96,7 +98,7 @@ Start Kuberntes cluster with config:
 
 > when we run this commands this file is taken and passed to the master  
 
-**checking the pods and services command**
+**checking the pods and services command and deployments**
 
 > kubectl get pods  
 
@@ -108,6 +110,18 @@ client-pod   1/1     Running   0          4m49s
 NAME               TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE  
 client-node-port   NodePort    10.100.71.34     none       3050:31515/TCP   2m59s  
 kubernetes         ClusterIP   10.96.0.1        none        443/TCP          4h32m  
+
+> kubectl get deployments
+
+**deleting a pod**
+> kubectl delete - f filepath  
+<img src="/photos/36.png"> 
+
+**to get access to your app**  
+if you are using docker/kubernetes : localhost:port
+if you are using Minikube :  
+- you type in the shell minikube ip (to get the ip of your node VM)
+- in the browser you type ip:port
 
 ## 7. Deployment workflow
 
@@ -123,3 +137,36 @@ Note: in the master there are 3 or 4 programs that controls the Kubernetes clust
 <img src="/photos/30.png">  
 
 
+## 9. Updating a Kubernetes cluster
+<img src="/photos/31.png">  
+when we change the yaml file you run the command:  
+> kubectl apply -f file.yaml  
+
+if you want to check the details of an object you type :  
+<img src="/photos/32.png">  
+kubectl describe pod client-pod
+
+### Limitation in the updating a Pod
+the updating process is limited because we cannot change everything (containerPort for example)  
+
+kubectl apply -f client.pod.yaml  
+pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)
+
+> So avoid this issue, we will introduce a new Object called Deployment  
+<img src="/photos/33.png">  
+<img src="/photos/34.png">  
+
+the deployment runs a set of identical pods (on or more), every pod will have the exact same set of containers with identical configuration  
+Deployment use what is called a Pod template to create pods as shown below :  
+<img src="/photos/35.png">
+
+When updating the pod created is not possible, Deployment will kill the Pod and create a new one.
+
+## Why use Service ? 
+Service alow to route traffic the right pod using the component selector, this layer is very important as the pod IP may change for whatever the cause (re-run, shutdown, error)  
+> kubectl get pods -o wide  
+
+NAME                   |              READY  | STATUS  |  RESTARTS  | AGE  |   IP   |      NODE             NOMINATED NODE  | READINESS GATES|  
+client-deployment-5dfb6bf966-ctwgd |  1/1  |   Running |  0   |       7m45s |  10.1.0.7  | docker-desktop  | <none>     |      <none>|  
+
+<img src="/photos/37.png">

@@ -7,6 +7,6 @@ metadata:
 spec:
   containers: # list of the containers
     - name: client # we give a name
-      image: goahead19/multi-client-09-08 # image from the docker hub
+      image: goahead19/multi-client # image from the docker hub updated
       ports: #
         - containerPort: 3000 # from this container Expose port 3000 to the outside world

@@ -1,0 +1,12 @@
+apiVersion: v1 # each version give access to a set of object we can use
+kind: Pod # defining the object type Pod used to run a container
+metadata:
+  name: client-pod # name of the pod created
+  labels:
+    component: web # we could change component by another name we are free
+spec:
+  containers: # list of the containers
+    - name: client # we give a name
+      image: goahead19/multi-client # image from the docker hub updated
+      ports: #
+        - containerPort: 3000 # from this container Expose port 3000 to the outside world
