@@ -63,10 +63,11 @@ kubectl get pods -n ingress-nginx
 
 It should show something similar:
 get pods -n ingress-nginx
-NAME                                       READY   STATUS      RESTARTS   AGE
-ingress-nginx-admission-create-499cn       0/1     Completed   0          79s
-ingress-nginx-admission-patch-667p4        0/1     Completed   2          79s
-ingress-nginx-controller-86d99778d-gxvnh   1/1     Running     0          80s
+|NAME |READY |  STATUS   |   RESTARTS  | AGE|  
+|---|---|---|---|---|  
+|ingress-nginx-admission-create-499cn    |   0/1    | Completed |  0    |      79s|  
+|ingress-nginx-admission-patch-667p4     |   0/1   |  Completed  | 2    |      79s|  
+|ingress-nginx-controller-86d99778d-gxvnh  | 1/1    | Running     |0         | 80s|  
 
 - 3. create Ingress configuration
 
@@ -200,7 +201,8 @@ secret is an object that can configured with yaml config file, but in that case 
 
 <img src="photos/18.png">   
 
-> kubectl create secret generic pgpassword -- PGPASSWORD=easypass  
+> kubectl create secret generic pgpassword --from-literal PGPASSWORD=easypass
+  
 
 secret/pgpassword created
 
