@@ -53,11 +53,11 @@ the philosophy is :
 when creating an Ingress-Nginx service, (the Ingress controller will create the Nginx pod) in the same pod
 
 **Installation guide Ingress-Nginx**
-1. Execute the provider-specific command noted here:
+- 1. Execute the provider-specific command noted here:
 
 https://kubernetes.github.io/ingress-nginx/deploy/#docker-desktop
 
-2. Verify the service was enabled by running the following:
+- 2. Verify the service was enabled by running the following:
 
 kubectl get pods -n ingress-nginx
 
@@ -68,7 +68,7 @@ ingress-nginx-admission-create-499cn       0/1     Completed   0          79s
 ingress-nginx-admission-patch-667p4        0/1     Completed   2          79s
 ingress-nginx-controller-86d99778d-gxvnh   1/1     Running     0          80s
 
-
+- 3. create Ingress configuration
 
 
 ### 1.3 Load Balancer
