@@ -24,12 +24,57 @@ we will use deployments to create the needed pods
 ## 1. Services used
 **Note** a service is needed when we have a request into a set of pods (or a single pod), so for the worker there is no need to have a ClusterIP neither a port setting  
 there is no information inside the worker than need to be accessible from anything else inside our cluster
-### 1. ClusterIP
+### 1.1 ClusterIP
 the ClusterIP exposes a set of pods to other objects in the cluster  
 <img src="photos/3.png">
 
-### 2. Ingress Service
+### 1.2 Ingress Service
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource  
+<img src="photos/20.png">  
+### 1.2.1 Ingress implementations
+Kubernetes as a project supports and maintains [AWS](https://github.com/kubernetes-sigs/aws-load-balancer-controller#readme), [GCE](https://github.com/kubernetes/ingress-gce), and [nginx](https://github.com/kubernetes/ingress-nginx/blob/main/README.md#readme) ingress controllers.  
 
+there are  multiple implementation of Ingress, for this project we will use **Nginx Ingress**  
+<img src="photos/21.png">   
+<img src="photos/22.png">  
+<img src="photos/23.png">
+
+### 1.2.2 Ingress behind the scene
+Ingress need to be considered as the deployment object for services, see the analogy below
+<img src="photos/24.png">  
+- 1 - create a config file with the routing rules (yaml file)
+- 2 - execute kubectl apply -f (yaml file) : this will create the Ingress controller
+- 3 - the ingress controller will look at the desired state and create the infrastructure (Nginx pod) to meet the desired state  
+the philosophy is :
+<img src="photos/25.png">
+
+**When creating Ingress-Nginx on Google Cloud** here below what happens:  
+<img src="photos/26.png">  
+when creating an Ingress-Nginx service, (the Ingress controller will create the Nginx pod) in the same pod
+
+**Installation guide Ingress-Nginx**
+1. Execute the provider-specific command noted here:
+
+https://kubernetes.github.io/ingress-nginx/deploy/#docker-desktop
+
+2. Verify the service was enabled by running the following:
+
+kubectl get pods -n ingress-nginx
+
+It should show something similar:
+get pods -n ingress-nginx
+NAME                                       READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-499cn       0/1     Completed   0          79s
+ingress-nginx-admission-patch-667p4        0/1     Completed   2          79s
+ingress-nginx-controller-86d99778d-gxvnh   1/1     Running     0          80s
+
+
+
+
+### 1.3 Load Balancer
+A load balancer is a service that allows access to one specific set of pods, so very important, a load balancer cannot give access to more than one set of pods, this is why it will be not used in our project as we have 2 sets of pods (multi-client and multi-server) that needs to be connected to the outside world  
+<img src="photos/19.png">  
+so when using Load balancer service, kubernetes will also reach out to the cloud provider (AWS, GCP..) and it will use their configuration (or definition) of what a LoadBalancer is, then the cloud provider will set up a load balancer ressouce outside of K8s cluster and it will configure it automatically to send traffic into the K8s cluster and access the LoadBalancer Service that is set up to governe a set of pods.  
 
 ## creating object
 > 1. Create a folder K8s where you store all the config yaml files
@@ -160,3 +205,45 @@ secret is an object that can configured with yaml config file, but in that case 
 secret/pgpassword created
 
 ### Passing secrets as environment variables
+```YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: cygnetops/multi-server-pgfix-5-11
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379' # redis default port (must be between quotes as string)
+            - name: PGUSER
+              value: postgres # by default PGUSER
+            - name: PGHOST
+              value: postgres-cluster-ip-service # ClusterIP of postgres pod
+            - name: PGPORT 
+              value: '5432' # postgres default port (must be between quotes as string)
+            - name: PGDATABASE 
+              value: postgres  # default postgres database 
+            - name: PGPASSWORD # name of the variable 
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword # the secret name created
+                  key: PGPASSWORD # the secret key created
+```
+
+```YAML
+

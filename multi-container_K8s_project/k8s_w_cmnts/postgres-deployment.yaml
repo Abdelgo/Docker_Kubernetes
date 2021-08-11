@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes: # here we specify that we need a persistent storage as described in the claim
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim # we give the claim name
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts: # describe how the storage will be used inside the container (like docker volume)
+            - name: postgres-storage #we specify the volumename that must be used-see volumes section
+              mountPath: /var/lib/postgresql/data # here the path inside the container from where we  store the content inside the persistent storage (the data that we want to backup )
+              subPath: postgres # the name of the folder inside the persistent storage where this data will be stored
+          env:
+            - name: POSTGRES_PASSWORD # changed from PGPASSWORD to POSTGRES_PASSWORD in the official Postgres image
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword # the secret name created
+                  key: PGPASSWORD # the secret key created

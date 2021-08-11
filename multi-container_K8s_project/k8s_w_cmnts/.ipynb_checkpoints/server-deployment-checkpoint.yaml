@@ -21,17 +21,17 @@ spec:
             - name: REDIS_HOST
               value: redis-cluster-ip-service
             - name: REDIS_PORT
-              value: '6379'
+              value: '6379' # redis default port (must be between quotes as string)
             - name: PGUSER
-              value: postgres
+              value: postgres # by default PGUSER
             - name: PGHOST
-              value: postgres-cluster-ip-service
-            - name: PGPORT
-              value: '5432'
-            - name: PGDATABASE
-              value: postgres
-            - name: PGPASSWORD
+              value: postgres-cluster-ip-service # ClusterIP of postgres pod
+            - name: PGPORT 
+              value: '5432' # postgres default port (must be between quotes as string)
+            - name: PGDATABASE 
+              value: postgres  # default postgres database 
+            - name: PGPASSWORD # name of the variable 
               valueFrom:
                 secretKeyRef:
-                  name: pgpassword
-                  key: PGPASSWORD
+                  name: pgpassword # the secret name created
+                  key: PGPASSWORD # the secret key created

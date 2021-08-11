@@ -16,7 +16,7 @@ spec:
         - name: worker
           image: stephengrider/multi-worker
           env:
-            - name: REDIS_HOST
-              value: redis-cluster-ip-service
-            - name: REDIS_PORT
-              value: '6379'
+            - name: REDIS_HOST # name of the env variable
+              value: redis-cluster-ip-service # specify the CLusterIP responsible to communicate with redis pod
+            - name: REDIS_PORT # port
+              value: '6379' # default port used by redis (same value used also for redis ClusterIP)
