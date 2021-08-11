@@ -118,3 +118,86 @@ spec:
 ```
 
 for more details please visit : https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+
+**get infos about pv**
+
+> kubectl get pv (list all the pv created inside our application, list the instance of storage that meets requirment pvc)
+
+
+kubectl get pv
+|NAME|CAPACITY|ACCESS MODES|RECLAIM POLICY|STATUS|CLAIM|STORAGECLASS|REASON|AGE|  
+|---|---|---|---|---|---|---|---|---|  
+|pvc-4ad12b40-985a-4e16-9dc6-e6dec7a7d91c|1Gi|RWO|Delete|Bound|default/database-persistent-volume-claim|hostpath|47m|  
+
+> kubectl get pvc (list all the claims) 
+
+## Environment Variables
+<img src="photos/1.png">
+
+**Objectives:** 
+- permit to the multi-worker pod to connect to Redis DB
+- permit to the multi-server pods to connect to Redis DB and Postgress DB
+
+**Solution:** 
+we need to specify the information needed for each type of DB as described below :  
+<img src="photos/16.png"> / <img src="photos/17.png">
+Red: Are the hosts link
+Yellow: databases informations
+White : is postgress password ( see section Secret Variables)
+
+**Method :** in the yaml config files we add environment variables in the client side which means in:  
+- multi-worker deployment
+- multi-server deployment
+
+## Secrets
+
+secret is an object that can configured with yaml config file, but in that case our passwords will be visible, therefore we use a **Imperative approach** see instruction below :
+
+<img src="photos/18.png">   
+
+> kubectl create secret generic pgpassword -- PGPASSWORD=easypass  
+
+secret/pgpassword created
+
+### Passing secrets as environment variables
+```YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: cygnetops/multi-server-pgfix-5-11
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379' # redis default port (must be between quotes as string)
+            - name: PGUSER
+              value: postgres # by default PGUSER
+            - name: PGHOST
+              value: postgres-cluster-ip-service # ClusterIP of postgres pod
+            - name: PGPORT 
+              value: '5432' # postgres default port (must be between quotes as string)
+            - name: PGDATABASE 
+              value: postgres  # default postgres database 
+            - name: PGPASSWORD # name of the variable 
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword # the secret name created
+                  key: PGPASSWORD # the secret key created
+```
+
+```YAML
