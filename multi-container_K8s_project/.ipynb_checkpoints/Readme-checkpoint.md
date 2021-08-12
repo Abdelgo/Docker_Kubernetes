@@ -193,9 +193,36 @@ White : is postgress password ( see section Secret Variables)
 
 **Method :** in the yaml config files we add environment variables in the client side which means in:  
 - multi-worker deployment
-- multi-server deployment
+- multi-server deployment  
+example of worker:  
+```YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: worker
+  template:
+    metadata:
+      labels:
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image: stephengrider/multi-worker
+          env:
+            - name: REDIS_HOST # name of the env variable
+              value: redis-cluster-ip-service # specify the CLusterIP responsible to communicate with redis pod
+            - name: REDIS_PORT # port
+              value: '6379' # default port used by redis (same value used also for redis ClusterIP)
+```
 
 ## Secrets
+
+[kubernetes Secrets section](https://kubernetes.io/fr/docs/concepts/configuration/secret/)
 
 secret is an object that can configured with yaml config file, but in that case our passwords will be visible, therefore we use a **Imperative approach** see instruction below :
 
@@ -247,5 +274,4 @@ spec:
                   key: PGPASSWORD # the secret key created
 ```
 
-```YAML
-
+[secrets and config map article](https://medium.com/@xcoulon/managing-pod-configuration-using-configmaps-and-secrets-in-kubernetes-93a2de9449be)
